@@ -27,8 +27,11 @@ public class BranchEntity {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Long getFranchiseId() {
         return franchiseId;
     }
-
 }

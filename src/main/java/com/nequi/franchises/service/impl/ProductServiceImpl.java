@@ -38,10 +38,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Mono<ProductDto> updateProduct(Long id, ProductDto productDto, Long branchId) {
-        ProductEntity productEntity = ProductMapper.toEntity(productDto, branchId);
-        productEntity.setBranchId(branchId);
-        return productRepository.save(productEntity).map(ProductMapper::toDto);
+        return productRepository.findById(id)
+                .flatMap(existingProduct -> {
+                    existingProduct.setName(productDto.name());
+                    existingProduct.setStock(productDto.stock());
+                    existingProduct.setBranchId(branchId);
+
+                    return productRepository.save(existingProduct)
+                            .map(ProductMapper::toDto);
+                })
+                .switchIfEmpty(Mono.error(new RuntimeException("Product not found")));
     }
+
 
     @Override
     public Mono<Void> deleteProduct(Long id) {

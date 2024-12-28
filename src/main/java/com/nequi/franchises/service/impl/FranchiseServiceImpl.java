@@ -8,7 +8,6 @@ import com.nequi.franchises.mapper.ProductMapper;
 import com.nequi.franchises.repository.BranchRepository;
 import com.nequi.franchises.repository.FranchiseRepository;
 import com.nequi.franchises.repository.ProductRepository;
-import com.nequi.franchises.repository.entity.FranchiseEntity;
 import com.nequi.franchises.service.FranchiseService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -69,18 +68,17 @@ public class FranchiseServiceImpl implements FranchiseService {
     @Override
     public Mono<FranchiseDto> updateFranchise(Long id, FranchiseDto franchiseDto) {
         return franchiseRepository.findById(id)
-                .flatMap(existingFranchise -> convertAndSaveFranchise(id, franchiseDto));
+                .flatMap(existingFranchise -> {
+                    existingFranchise.setName(franchiseDto.name());
+                    return franchiseRepository.save(existingFranchise)
+                            .flatMap(savedFranchise ->
+                                    getBranchesByFranchiseId(savedFranchise.getId())
+                                            .map(branchDtos -> FranchiseMapper.toDto(savedFranchise, branchDtos))
+                            );
+                })
+                .switchIfEmpty(Mono.error(new RuntimeException("Franchise not found")));
     }
 
-    private Mono<FranchiseDto> convertAndSaveFranchise(Long id, FranchiseDto franchiseDto) {
-        FranchiseEntity franchiseEntity = FranchiseMapper.toEntity(franchiseDto);
-        franchiseEntity.setId(id);
-        return franchiseRepository.save(franchiseEntity)
-                .flatMap(savedFranchise ->
-                        getBranchesByFranchiseId(savedFranchise.getId())
-                                .map(branchDtos -> FranchiseMapper.toDto(savedFranchise, branchDtos))
-                );
-    }
 
     @Override
     public Mono<Void> deleteFranchise(Long id) {

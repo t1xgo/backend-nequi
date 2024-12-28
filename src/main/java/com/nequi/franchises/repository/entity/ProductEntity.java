@@ -39,4 +39,12 @@ public class ProductEntity {
     public void setBranchId(Long branchId) {
         this.branchId = branchId;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
 }

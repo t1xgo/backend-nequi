@@ -56,13 +56,19 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public Mono<BranchDto> updateBranch(Long id, BranchDto branchDto, Long franchiseId) {
-        return branchRepository.findById(id).flatMap
-                (branch -> branchRepository.save(BranchMapper.toEntity(branchDto, franchiseId)))
-                .flatMap(branchEntity ->
-                        getProductsByBranchId(branchEntity.getId())
-                                .map(productDtos -> BranchMapper.toDto(branchEntity, productDtos))
-                );
+        return branchRepository.findById(id)
+                .flatMap(existingBranch -> {
+                    existingBranch.setName(branchDto.name());
+
+                    return branchRepository.save(existingBranch)
+                            .flatMap(savedBranch ->
+                                    getProductsByBranchId(savedBranch.getId())
+                                            .map(productDtos -> BranchMapper.toDto(savedBranch, productDtos))
+                            );
+                })
+                .switchIfEmpty(Mono.error(new RuntimeException("Branch not found")));
     }
+
 
     @Override
     public Mono<Void> deleteBranch(Long id) {
