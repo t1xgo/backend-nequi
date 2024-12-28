@@ -2,7 +2,6 @@ package com.nequi.franchises.controller;
 
 import com.nequi.franchises.controller.dto.ProductDto;
 import com.nequi.franchises.service.ProductService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,14 +26,14 @@ public class ProductController {
         return productService.getProduct(id);
     }
 
-    @PostMapping("/create")
-    Mono<ProductDto> createProduct(@RequestBody ProductDto productDto) {
-        return productService.createProduct(productDto);
+    @PostMapping("/create/{branchId}")
+    Mono<ProductDto> createProduct(@RequestBody ProductDto productDto, @PathVariable("branchId") Long branchId) {
+        return productService.createProduct(productDto, branchId);
     }
 
-    @PutMapping("/update/{productId}")
-    Mono<ProductDto> updateProduct(@PathVariable("productId") Long id, @RequestBody ProductDto productDto) {
-        return productService.updateProduct(id, productDto);
+    @PutMapping("/update/{productId}/{branchId}")
+    Mono<ProductDto> updateProduct(@PathVariable("productId") Long id, @RequestBody ProductDto productDto, @PathVariable("branchId") Long branchId) {
+        return productService.updateProduct(id, productDto, branchId);
     }
 
     @DeleteMapping("/delete/{productId}")

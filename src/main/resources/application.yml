@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: APIRestfranchises
+
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://franchisedb.cnikgeemcz4m.us-east-2.rds.amazonaws.com:5432/franchisedb
+    user: postgres
+    password: mypassword
+
+  r2dbc:
+    url: r2dbc:postgresql://franchisedb.cnikgeemcz4m.us-east-2.rds.amazonaws.com:5432/franchisedb
+    username: postgres
+    password: mypassword
+
+server:
+  port: 9090

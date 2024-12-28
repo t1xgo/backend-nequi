@@ -1,18 +1,34 @@
 package com.nequi.franchises.repository.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.util.List;
-
-@Getter
-@Setter
-@Builder
 @Table("branch")
 public class BranchEntity {
+    @Id
     private Long id;
     private String name;
-    private List<ProductEntity> products;
+    private Long franchiseId;
+
+    public BranchEntity() {
+    }
+
+    public BranchEntity(Long id, String name, Long franchiseId) {
+        this.id = id;
+        this.name = name;
+        this.franchiseId = franchiseId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Long getFranchiseId() {
+        return franchiseId;
+    }
+
 }

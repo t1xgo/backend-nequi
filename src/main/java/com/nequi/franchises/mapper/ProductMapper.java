@@ -15,11 +15,12 @@ public class ProductMapper {
     }
 
     // Mapping from Dto to entity
-    public static ProductEntity toEntity(ProductDto productDto) {
-        return ProductEntity.builder()
-                .id(productDto.id())
-                .name(productDto.name())
-                .stock(productDto.stock())
-                .build();
+    public static ProductEntity toEntity(ProductDto productDto, Long branchId) {
+        return new ProductEntity(
+                productDto.id(),
+                productDto.name(),
+                productDto.stock(),
+                branchId
+        );
     }
 }

@@ -2,7 +2,6 @@ package com.nequi.franchises.controller;
 
 import com.nequi.franchises.controller.dto.BranchDto;
 import com.nequi.franchises.service.BranchService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,14 +26,14 @@ public class BranchController {
         return branchService.getBranch(id);
     }
 
-    @PostMapping("/create")
-    Mono<BranchDto> createBranch(@RequestBody BranchDto branchDto) {
-        return branchService.createBranch(branchDto);
+    @PostMapping("/create/{franchiseId}")
+    Mono<BranchDto> createBranch(@RequestBody BranchDto branchDto, @PathVariable("franchiseId") Long franchiseId) {
+        return branchService.createBranch(branchDto, franchiseId);
     }
 
-    @PutMapping("/update/{branchId}")
-    Mono<BranchDto> updateBranch(@PathVariable("branchId") Long id, @RequestBody BranchDto branchDto) {
-        return branchService.updateBranch(id, branchDto);
+    @PutMapping("/update/{branchId}/{franchiseId}")
+    Mono<BranchDto> updateBranch(@PathVariable("branchId") Long id, @RequestBody BranchDto branchDto, @PathVariable("franchiseId") Long franchiseId) {
+        return branchService.updateBranch(id, branchDto, franchiseId);
     }
 
     @DeleteMapping("/delete/{branchId}")
